@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useRef} from 'react';
 import {
   View,
   Text,
@@ -9,21 +9,62 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Logo from '../images/LogoOrange.png';
+import logoutIcon from '../images/logoutIcon.png';
 
 import {AuthContext} from '../context/AuthContext';
+import LinearGradient from 'react-native-linear-gradient';
 
 function DashboardView({navigation}) {
-  const {userInfo} = useContext(AuthContext);
+  const {userInfo, logout} = useContext(AuthContext);
+
+  const onSuccess = e => {
+    console.log(e.data);
+  };
 
   return (
     <SafeAreaView style={styles.background}>
-      <TouchableOpacity>
-        <Text>Wyloguj</Text>
-      </TouchableOpacity>
-      <Image source={Logo} style={styles.logo} />
-      <Text>Witaj {userInfo.name}</Text>
-      <View>
-        <Text onPress={() => navigation.navigate('Test')}>Test</Text>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.header.logout} onPress={() => logout()}>
+          <LinearGradient
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            colors={['#DD6C15', '#F41C2A']}
+            style={styles.header.logout.gradient}>
+            <Image
+              source={logoutIcon}
+              style={styles.header.logout.gradient.img}
+            />
+          </LinearGradient>
+        </TouchableOpacity>
+      </View>
+      <View style={styles.main}>
+        <Image source={Logo} style={styles.main.logo} />
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Collect')}
+          style={styles.main.button}>
+          <LinearGradient
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            colors={['#DD6C15', '#F41C2A']}
+            style={styles.header.logout.gradient}>
+            <Text style={styles.main.button.text}>
+              Przyjęcie Paczek Na Magazyn
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('Test')}
+          style={styles.main.button}>
+          <LinearGradient
+            start={{x: 0, y: 0}}
+            end={{x: 1, y: 0}}
+            colors={['#DD6C15', '#F41C2A']}
+            style={styles.header.logout.gradient}>
+            <Text style={styles.main.button.text}>
+              Wydanie Paczki Do Klienta
+            </Text>
+          </LinearGradient>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -36,34 +77,60 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'center',
+  },
+
+  header: {
+    width: '100%',
+    height: 80,
+    padding: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+
+    logout: {
+      width: 36,
+      height: 36,
+      borderRadius: 50,
+
+      gradient: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 50,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+
+        img: {
+          width: 28,
+          height: 28,
+        },
+      },
+    },
   },
 
-  logo: {
-    height: 150,
-    objectFit: 'contain',
-  },
+  main: {
+    marginTop: 80,
 
-  input: {
-    width: '80%',
-    height: 44,
-    marginBottom: 10,
-    borderRadius: 6,
-    padding: 10,
-    backgroundColor: '#212225',
-    color: '#fff',
-  },
+    logo: {
+      height: 180,
+      marginBottom: 20,
+      width: '100%',
+      objectFit: 'contain',
+    },
 
-  error: {
-    color: 'red',
-    marginTop: 10,
-    marginBottom: 10,
-    borderRadius: 6,
-    padding: 10,
-    width: '80%',
-    textAlign: 'center',
-    backgroundColor: '#400b0b',
+    button: {
+      width: '100%',
+      paddingLeft: 20,
+      paddingRight: 20,
+      height: 50,
+      marginBottom: 20,
+
+      text: {
+        color: '#121316',
+        fontSize: 18,
+      },
+    },
   },
 });
 

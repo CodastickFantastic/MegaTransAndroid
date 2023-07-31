@@ -37,6 +37,31 @@ export const AuthProvider = ({children}) => {
       });
   };
 
+  const logout = () => {
+    setIsLoading(true);
+
+    // Delete JWT from server API
+    axios
+      .post(`${BASE_URL}/drivers/logout`, {
+        headers: {
+          Authorization: userInfo.accessToken,
+        },
+      })
+      .then(res => {
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+
+        console.log('Logout Success:', res);
+      })
+      .catch(err => {
+        console.log(err);
+        AsyncStorage.removeItem('userInfo');
+        setUserInfo({});
+        setIsLoading(false);
+      });
+  };
+
   const isLoggedIn = async () => {
     try {
       setSplashLoading(true);
@@ -44,7 +69,22 @@ export const AuthProvider = ({children}) => {
       userInfo = JSON.parse(userInfo);
 
       if (userInfo) {
-        setUserInfo(userInfo);
+        axios
+          .get(
+            `${BASE_URL}/drivers/checkLogin`,
+            {
+              headers: {
+                Authorization: userInfo.accessToken,
+              },
+            },
+          )
+          .then(res => {
+            setUserInfo(userInfo);
+            console.log("User JWT confirmed!")
+          })
+          .catch(err => {
+            console.log("Outdated JWT, logging out...")
+          });
       }
 
       setSplashLoading(false);
@@ -63,6 +103,7 @@ export const AuthProvider = ({children}) => {
       value={{
         login,
         isLoggedIn,
+        logout,
         axiosError,
         isLoading,
         splashLoading,

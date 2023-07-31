@@ -5,6 +5,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import DashboardView from '../views/DashboardView';
 import LoginView from '../views/LoginView';
+import CollectView from '../views/CollectView';
 
 import {AuthContext} from '../context/AuthContext';
 import SplashView from '../views/SplashView';
@@ -23,7 +24,10 @@ function Navigation() {
         {splashLoading ? (
           <Stack.Screen name="SplashView" component={SplashView} />
         ) : userInfo.accessToken ? (
-          <Stack.Screen name="Dashboard" component={DashboardView} />
+          <>
+            <Stack.Screen name="Dashboard" component={DashboardView} />
+            <Stack.Screen name="Collect" component={CollectView} />
+          </>
         ) : (
           <Stack.Screen name="Login" component={LoginView} />
         )}
